@@ -40,6 +40,7 @@ class FadingTextAnimation extends StatefulWidget {
 
 class _FadingTextAnimationState extends State<FadingTextAnimation> {
   bool _isVisible = true;
+  bool _isDarkMode = false;
   Color _textColor = Colors.black;
 
   void toggleVisibility() {
@@ -85,6 +86,12 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
     );
   }
 
+  void _toggleBackground() {
+    setState(() {
+      _isDarkMode = !_isDarkMode;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,7 +107,7 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
             onPressed: _pickColor,
           ),
           IconButton(
-            onPressed: widget.toggleTheme,
+            onPressed: _toggleBackground,
             icon: Image.asset(
               'assets/day_night_toggle.png', // Ensure this asset exists
               width: 30,
@@ -109,6 +116,7 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
           ),
         ],
       ),
+      backgroundColor: _isDarkMode ? Colors.black : Colors.white,
       body: Center(
         child: AnimatedOpacity(
           opacity: _isVisible ? 1.0 : 0.0,
