@@ -108,6 +108,17 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
               height: 30,
             ),
           ),
+        IconButton(
+            onPressed: () { 
+              // Navigate to SecondScreen
+              Navigator.push(
+                context, 
+                MaterialPageRoute(builder: (context) => SecondScreen()),
+              ); 
+            },
+            icon: Icon(Icons.swap_horiz), // Swap screens icon
+          ),
+
         ],
       ),
       body: Center(
@@ -123,6 +134,57 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
       floatingActionButton: FloatingActionButton(
         onPressed: toggleVisibility,
         child: Icon(Icons.play_arrow),
+      ),
+    );
+  }
+}
+class SecondScreen extends StatefulWidget {
+  @override
+  _SecondScreenState createState() => _SecondScreenState();
+}
+
+class _SecondScreenState extends State<SecondScreen> {
+  bool _isVisible = true; // Controls visibility of text
+
+  void toggleVisibility() {
+    setState(() {
+      _isVisible = !_isVisible;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Second Screen'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AnimatedOpacity(
+              opacity: _isVisible ? 1.0 : 0.0,
+              duration: Duration(seconds: 2), // Different duration
+              child: Text(
+                'Fading Text Animation 2',
+                style: TextStyle(fontSize: 24),
+              ),
+            ),
+            SizedBox(height: 20), // Adds spacing
+            ElevatedButton(
+              onPressed: toggleVisibility, // Toggle visibility
+              child: Text('Toggle Text Fade'),
+            ),
+            SizedBox(height: 20), // Adds spacing
+            ElevatedButton(
+              onPressed: () {
+                // Navigate back to the first screen
+                Navigator.pop(context);
+              },
+              child: Text('Go Back'), // Back button
+            ),
+          ],
+        ),
       ),
     );
   }
