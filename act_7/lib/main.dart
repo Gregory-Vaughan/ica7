@@ -1,22 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  ThemeData _themeData = ThemeData.light();
+
+  void _toggleTheme() {
+    setState(() {
+      _themeData = (_themeData == ThemeData.light()) ? ThemeData.dark() : ThemeData.light();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: FadingTextAnimation(),
+      theme: _themeData,
+      home: FadingTextAnimation(toggleTheme: _toggleTheme),
     );
   }
 }
 
 class FadingTextAnimation extends StatefulWidget {
-  const FadingTextAnimation({super.key});
+  final VoidCallback toggleTheme;
+  const FadingTextAnimation({super.key, required this.toggleTheme});
 
   @override
   _FadingTextAnimationState createState() => _FadingTextAnimationState();
@@ -25,6 +41,7 @@ class FadingTextAnimation extends StatefulWidget {
 class _FadingTextAnimationState extends State<FadingTextAnimation> {
   bool _isVisible = true;
   bool _isDarkMode = false;
+  Color _textColor = Colors.black;
 
   void toggleVisibility() {
     setState(() {
@@ -32,7 +49,44 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
     });
   }
 
-  void toggleBackground() {
+  void _pickColor() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        Color pickedColor = _textColor;
+        return AlertDialog(
+          title: Text("Pick a color"),
+          content: SingleChildScrollView(
+            child: ColorPicker(
+              pickerColor: _textColor,
+              onColorChanged: (color) {
+                pickedColor = color;
+              },
+              showLabel: false,
+              pickerAreaHeightPercent: 0.8,
+            ),
+          ),
+          actions: [
+            TextButton(
+              child: Text("Cancel"),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            TextButton(
+              child: Text("Select"),
+              onPressed: () {
+                setState(() {
+                  _textColor = pickedColor;
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _toggleBackground() {
     setState(() {
       _isDarkMode = !_isDarkMode;
     });
@@ -45,15 +99,37 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
         title: Text('Fading Text Animation'),
         actions: [
           IconButton(
-            onPressed: toggleBackground,
             icon: Image.asset(
-              'assets/day_night_toggle.png',
+              'assets/color_pallete_toggle.png', // Ensure this asset exists
+              width: 30,
+              height: 30,
+            ),
+            onPressed: _pickColor,
+          ),
+          
+          IconButton(
+            onPressed: _toggleBackground,
+            icon: Image.asset(
+              'assets/day_night_toggle.png', // Ensure this asset exists
               width: 30,
               height: 30,
             ),
           ),
+          IconButton(
+            onPressed: () { 
+              // Navigate to SecondScreen
+              Navigator.push(
+                context, 
+                MaterialPageRoute(builder: (context) => SecondScreen()),
+              ); 
+            },
+            icon: Icon(Icons.swap_horiz), // Swap screens icon
+          ),
         ],
+        
       ),
+
+      
       backgroundColor: _isDarkMode ? Colors.black : Colors.white,
       body: Center(
         child: AnimatedOpacity(
@@ -61,16 +137,31 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
           duration: Duration(seconds: 1),
           child: Text(
             'Hello, Flutter!',
-            style: TextStyle(
-              fontSize: 24,
-              color: _isDarkMode ? Colors.white : Colors.black,
-            ),
+            style: TextStyle(fontSize: 24, color: _textColor),
           ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: toggleVisibility,
         child: Icon(Icons.play_arrow),
+      ),
+    );
+  }
+
+}
+
+class SecondScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Second Screen'),
+      ),
+      body: Center(
+        child: Text(
+          'Fading Text Animation 2',
+          style: TextStyle(fontSize: 24),
+        ),
       ),
     );
   }
