@@ -40,10 +40,19 @@ class FadingTextAnimation extends StatefulWidget {
 class _FadingTextAnimationState extends State<FadingTextAnimation> {
   bool _isVisible = true;
   Color _textColor = Colors.black;
+  int _currentTextIndex = 0;
+
+  final List<String> _texts = [
+    "Hello, Flutter!",
+    "Animations are cool!",
+    "But hard to do :( )",
+    "It was woth it tho!",
+  ];
 
   void toggleVisibility() {
     setState(() {
       _isVisible = !_isVisible;
+      _currentTextIndex = (_currentTextIndex + 1) % _texts.length;
     });
   }
 
@@ -52,7 +61,7 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Pick a color"),
+          title: const Text("Pick a color"),
           content: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -90,7 +99,7 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Fading Text Animation'),
+        title: const Text('Fading Text Animation'),
         actions: [
           IconButton(
             icon: Image.asset(
@@ -113,16 +122,17 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
       body: Center(
         child: AnimatedOpacity(
           opacity: _isVisible ? 1.0 : 0.0,
-          duration: Duration(seconds: 1),
+          duration: const Duration(milliseconds: 800), // Faster fade effect
+          curve: Curves.easeInOut, // Smooth transition
           child: Text(
-            'Hello, Flutter!',
+            _texts[_currentTextIndex], // Dynamic text change
             style: TextStyle(fontSize: 24, color: _textColor),
           ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: toggleVisibility,
-        child: Icon(Icons.play_arrow),
+        child: const Icon(Icons.play_arrow),
       ),
     );
   }
