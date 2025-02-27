@@ -1,0 +1,2 @@
+C:/Users/gpv52/Desktop/MAD/ica7/act_7/android/app/.cxx/Debug/ty404y1d/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/gpv52/Desktop/MAD/ica7/act_7/android/app/.cxx/Debug/ty404y1d/armeabi-v7a/CMakeFiles/rebuild_cache.dir

@@ -5,19 +5,34 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  ThemeData _themeData = ThemeData.light();
+
+  void _toggleTheme() {
+    setState(() {
+      _themeData = (_themeData == ThemeData.light()) ? ThemeData.dark() : ThemeData.light();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: FadingTextAnimation(),
+      theme: _themeData,
+      home: FadingTextAnimation(toggleTheme: _toggleTheme),
     );
   }
 }
 
 class FadingTextAnimation extends StatefulWidget {
-  const FadingTextAnimation({super.key});
+  final VoidCallback toggleTheme;
+  const FadingTextAnimation({super.key, required this.toggleTheme});
 
   @override
   _FadingTextAnimationState createState() => _FadingTextAnimationState();
@@ -77,8 +92,20 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
         title: Text('Fading Text Animation'),
         actions: [
           IconButton(
-            icon: Icon(Icons.palette),
+            icon: Image.asset(
+              'assets/color_pallete_toggle.png', // Ensure this asset exists
+              width: 30,
+              height: 30,
+            ),
             onPressed: _pickColor,
+          ),
+          IconButton(
+            onPressed: widget.toggleTheme,
+            icon: Image.asset(
+              'assets/day_night_toggle.png', // Ensure this asset exists
+              width: 30,
+              height: 30,
+            ),
           ),
         ],
       ),
