@@ -45,8 +45,8 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
   final List<String> _texts = [
     "Hello, Flutter!",
     "Animations are cool!",
-    "But hard to do :( )",
-    "It was woth it tho!",
+    "But hard to do :(",
+    "It was worth it tho!",
   ];
 
   void toggleVisibility() {
@@ -117,26 +117,24 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
               height: 30,
             ),
           ),
-        IconButton(
-            onPressed: () { 
-              // Navigate to SecondScreen
+          IconButton(
+            onPressed: () {
               Navigator.push(
-                context, 
-                MaterialPageRoute(builder: (context) => SecondScreen()),
-              ); 
+                context,
+                MaterialPageRoute(builder: (context) => SecondScreen(toggleTheme: widget.toggleTheme, pickColor: _pickColor)),
+              );
             },
-            icon: Icon(Icons.swap_horiz), // Swap screens icon
+            icon: const Icon(Icons.swap_horiz),
           ),
-
         ],
       ),
       body: Center(
         child: AnimatedOpacity(
           opacity: _isVisible ? 1.0 : 0.0,
-          duration: const Duration(milliseconds: 800), // Faster fade effect
-          curve: Curves.easeInOut, // Smooth transition
+          duration: const Duration(milliseconds: 800),
+          curve: Curves.easeInOut,
           child: Text(
-            _texts[_currentTextIndex], // Dynamic text change
+            _texts[_currentTextIndex],
             style: TextStyle(fontSize: 24, color: _textColor),
           ),
         ),
@@ -148,13 +146,19 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
     );
   }
 }
+
 class SecondScreen extends StatefulWidget {
+  final VoidCallback toggleTheme;
+  final VoidCallback pickColor;
+
+  const SecondScreen({super.key, required this.toggleTheme, required this.pickColor});
+
   @override
   _SecondScreenState createState() => _SecondScreenState();
 }
 
 class _SecondScreenState extends State<SecondScreen> {
-  bool _isVisible = true; // Controls visibility of text
+  bool _isVisible = true;
 
   void toggleVisibility() {
     setState(() {
@@ -166,7 +170,31 @@ class _SecondScreenState extends State<SecondScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Second Screen'),
+        title: const Text('Second Screen'),
+        actions: [
+          IconButton(
+            icon: Image.asset(
+              'assets/color_pallete_toggle.png',
+              width: 30,
+              height: 30,
+            ),
+            onPressed: widget.pickColor,
+          ),
+          IconButton(
+            onPressed: widget.toggleTheme,
+            icon: Image.asset(
+              'assets/day_night_toggle.png',
+              width: 30,
+              height: 30,
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.swap_horiz),
+          ),
+        ],
       ),
       body: Center(
         child: Column(
@@ -174,24 +202,24 @@ class _SecondScreenState extends State<SecondScreen> {
           children: [
             AnimatedOpacity(
               opacity: _isVisible ? 1.0 : 0.0,
-              duration: Duration(seconds: 2), // Different duration
-              child: Text(
+              duration: const Duration(seconds: 2),
+              curve: Curves.easeInOut,
+              child: const Text(
                 'Fading Text Animation 2',
                 style: TextStyle(fontSize: 24),
               ),
             ),
-            SizedBox(height: 20), // Adds spacing
+            const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: toggleVisibility, // Toggle visibility
-              child: Text('Toggle Text Fade'),
+              onPressed: toggleVisibility,
+              child: const Text('Toggle Text Fade'),
             ),
-            SizedBox(height: 20), // Adds spacing
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Navigate back to the first screen
                 Navigator.pop(context);
               },
-              child: Text('Go Back'), // Back button
+              child: const Text('Go Back'),
             ),
           ],
         ),
