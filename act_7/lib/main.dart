@@ -36,6 +36,16 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Fading Text Animation'),
+        actions: [
+          IconButton(
+            onPressed: () {}, // Currently does nothing
+            icon: Image.asset(
+              'assets/day_night_toggle.png', // Ensure this exists in your assets folder
+              width: 30,
+              height: 30,
+            ),
+          ),
+        ],
       ),
       body: Center(
         child: AnimatedOpacity(
