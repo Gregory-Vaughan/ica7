@@ -24,10 +24,17 @@ class FadingTextAnimation extends StatefulWidget {
 
 class _FadingTextAnimationState extends State<FadingTextAnimation> {
   bool _isVisible = true;
+  bool _isDarkMode = false;
 
   void toggleVisibility() {
     setState(() {
       _isVisible = !_isVisible;
+    });
+  }
+
+  void toggleBackground() {
+    setState(() {
+      _isDarkMode = !_isDarkMode;
     });
   }
 
@@ -38,22 +45,26 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
         title: Text('Fading Text Animation'),
         actions: [
           IconButton(
-            onPressed: () {}, // Currently does nothing
+            onPressed: toggleBackground,
             icon: Image.asset(
-              'assets/day_night_toggle.png', // Ensure this exists in your assets folder
+              'assets/day_night_toggle.png',
               width: 30,
               height: 30,
             ),
           ),
         ],
       ),
+      backgroundColor: _isDarkMode ? Colors.black : Colors.white,
       body: Center(
         child: AnimatedOpacity(
           opacity: _isVisible ? 1.0 : 0.0,
           duration: Duration(seconds: 1),
           child: Text(
             'Hello, Flutter!',
-            style: TextStyle(fontSize: 24),
+            style: TextStyle(
+              fontSize: 24,
+              color: _isDarkMode ? Colors.white : Colors.black,
+            ),
           ),
         ),
       ),
